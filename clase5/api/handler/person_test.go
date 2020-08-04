@@ -77,7 +77,7 @@ func TestCreate_wrong_structure(t *testing.T) {
 	}
 }
 
-func TestCreate_ok(t *testing.T) {
+func TestCreate(t *testing.T) {
 	data := []byte(`{"name": "Alexys", "age": 40, "communities": []}`)
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(data))
@@ -85,7 +85,8 @@ func TestCreate_ok(t *testing.T) {
 	e := echo.New()
 	ctx := e.NewContext(r, w)
 
-	p := newPerson(&PersonStorageOKMock{})
+	storage := PersonStorageOKMock{}
+	p := newPerson(&storage)
 	err := p.create(ctx)
 	if err != nil {
 		t.Errorf("no se esperaba error, se obtuvo %v", err)
@@ -105,4 +106,7 @@ func TestCreate_ok(t *testing.T) {
 	if resp.Message != wantMessage {
 		t.Errorf("mensaje de error equivocado: se esperaba %q, se obtuvo %q", wantMessage, resp.Message)
 	}
+
+	dataStorage, _ := storage.GetAll()
+	t.Logf("Mock storage: %v", dataStorage)
 }
