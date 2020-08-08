@@ -30,6 +30,10 @@ func TestCreate_integration(t *testing.T) {
 	if err != nil {
 		t.Errorf("no se esperaba error, se obtuvo %v", err)
 	}
+
+	if w.Code != http.StatusCreated {
+		t.Errorf("Código de estado, se esperaba %d, se obtuvo %d", http.StatusCreated, w.Code)
+	}
 }
 
 type responsePerson struct {
